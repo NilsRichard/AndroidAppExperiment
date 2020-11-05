@@ -86,11 +86,7 @@ public class Fragment1 extends Fragment {
         String tel = ((EditText) getView().findViewById(R.id.editTel)).getText().toString();
 
         if (mListener != null) {
-            List<UserInfo> list = myData.getUserInfos().getValue();
-            if(list==null) list = new ArrayList<>();
-            list.add(new UserInfo(nom, prenom, villeNaissance, dateNaissance, tel));
-            myData.setUserInfos(list);
-
+            myData.addUserInfo(new UserInfo(nom, prenom, villeNaissance, dateNaissance, tel));
             mListener.onFragment1Interaction();
         }
 

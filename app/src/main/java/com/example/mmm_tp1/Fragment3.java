@@ -55,6 +55,8 @@ public class Fragment3 extends Fragment implements UserInfoAdapter.UserInfoAdapt
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(mAdapter);
 
+
+
         // handle the floating action menu
         FloatingActionButton myFab = v.findViewById(R.id.nouveauClient);
         myFab.setOnClickListener(v1 -> {

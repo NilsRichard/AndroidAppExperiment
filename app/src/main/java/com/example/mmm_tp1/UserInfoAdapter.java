@@ -1,6 +1,5 @@
 package com.example.mmm_tp1;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.MyViewHolder> implements Filterable {
-    private List<UserInfo> contactList;
+public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.UserInfoHolder> implements Filterable {
+
+    private final List<UserInfo> contactList;
+    private final UserInfoAdapterListener listener;
+
     private List<UserInfo> contactListFiltered;
-    private UserInfoAdapterListener listener;
 
 
     public UserInfoAdapter(List<UserInfo> contactList, UserInfoAdapterListener listener) {
@@ -26,10 +27,10 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.MyView
         this.contactListFiltered = contactList;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class UserInfoHolder extends RecyclerView.ViewHolder {
         public TextView nom, prenom, ville, date;
 
-        public MyViewHolder(View view) {
+        public UserInfoHolder(View view) {
             super(view);
             nom = view.findViewById(R.id.nom);
             prenom = view.findViewById(R.id.prenom);
@@ -47,15 +48,15 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.MyView
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public UserInfoHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item, parent, false);
 
-        return new MyViewHolder(itemView);
+        return new UserInfoHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull UserInfoHolder holder, int position) {
         final UserInfo contact = contactListFiltered.get(position);
         holder.nom.setText(contact.getNom());
         holder.prenom.setText(contact.getPrenom());

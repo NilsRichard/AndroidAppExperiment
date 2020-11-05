@@ -19,9 +19,11 @@ public class SharedInfoVM extends ViewModel {
         return currentUserInfo;
     }
 
-    public void setUserInfos(List<UserInfo> newList) {
-        userInfos.setValue(newList);
+    public void addUserInfo(UserInfo userInfo) {
+        if(userInfos.getValue() == null) userInfos.setValue(new ArrayList<>());
+        userInfos.getValue().add(userInfo);
     }
+
     public LiveData<List<UserInfo>> getUserInfos() {
         return userInfos;
     }
