@@ -19,12 +19,12 @@ public class MainActivity extends AppCompatActivity implements Fragment1.OnFragm
     }
 
     @Override
-    public void onFragment2Interaction(Uri uri) {
+    public void onFragment2Interaction() {
         navController.navigate(R.id.action_fragment2_to_fragment1);
     }
 
     @Override
-    public void onFragment1Interaction(String nom, String prenom, String villeN, String dateN, String tel) {
+    public void onFragment1Interaction() {
         navController.navigate(R.id.action_fragment1_to_fragment2);
     }
 }

@@ -14,7 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 public class Fragment1 extends Fragment {
     private OnFragment1InteractionListener mListener;
@@ -26,6 +28,12 @@ public class Fragment1 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        myData = new ViewModelProvider(requireActivity()).get(SharedInfoVM.class);
     }
 
     @Override
@@ -75,7 +83,9 @@ public class Fragment1 extends Fragment {
         String tel = ((EditText) getView().findViewById(R.id.editTel)).getText().toString();
 
         if (mListener != null) {
-            mListener.onFragment1Interaction(nom, prenom, villeNaissance, dateNaissance, tel);
+            myData.setdata(new UserInfo(nom, prenom, villeNaissance, dateNaissance, tel));
+
+            mListener.onFragment1Interaction();
         }
 
     }
@@ -126,6 +136,6 @@ public class Fragment1 extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragment1InteractionListener {
-        void onFragment1Interaction(String nom, String prenom, String villeN, String dateN, String tel);
+        void onFragment1Interaction();
     }
 }
