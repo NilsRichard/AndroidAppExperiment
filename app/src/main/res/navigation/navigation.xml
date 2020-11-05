@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/fragment1">
+    app:startDestination="@id/fragment3">
     <fragment
         android:id="@+id/fragment1"
         android:name="com.example.mmm_tp1.Fragment1"
@@ -12,10 +12,10 @@
         <action
             android:id="@+id/action_fragment1_to_fragment2"
             app:destination="@id/fragment2">
-            <argument
-                android:name="nom"
-                android:defaultValue="Roger"
-                app:argType="string" />
+        </action>
+        <action
+            android:id="@+id/action_fragment1_to_fragment3"
+            app:destination="@id/fragment3">
         </action>
 
     </fragment>
@@ -26,6 +26,15 @@
         tools:layout="@layout/fragment2">
         <action
             android:id="@+id/action_fragment2_to_fragment1"
+            app:destination="@id/fragment1" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment3"
+        android:name="com.example.mmm_tp1.Fragment3"
+        android:label="fragment_fragment3"
+        tools:layout="@layout/fragment3">
+        <action
+            android:id="@+id/action_fragment3_to_fragment1"
             app:destination="@id/fragment1" />
     </fragment>
 </navigation>

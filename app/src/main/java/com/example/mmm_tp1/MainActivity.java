@@ -7,7 +7,7 @@ import androidx.navigation.Navigation;
 import android.net.Uri;
 import android.os.Bundle;
 
-public class MainActivity extends AppCompatActivity implements Fragment1.OnFragment1InteractionListener, Fragment2.OnFragment2InteractionListener {
+public class MainActivity extends AppCompatActivity implements Fragment1.OnFragment1InteractionListener, Fragment2.OnFragment2InteractionListener, Fragment3.OnFragment3InteractionListener {
     private NavController navController;
 
     @Override
@@ -25,6 +25,11 @@ public class MainActivity extends AppCompatActivity implements Fragment1.OnFragm
 
     @Override
     public void onFragment1Interaction() {
-        navController.navigate(R.id.action_fragment1_to_fragment2);
+        navController.navigate(R.id.action_fragment1_to_fragment3);
+    }
+
+    @Override
+    public void onFragment3Interaction() {
+        navController.navigate(R.id.action_fragment3_to_fragment1);
     }
 }

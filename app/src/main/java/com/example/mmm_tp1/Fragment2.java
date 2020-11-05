@@ -1,7 +1,6 @@
 package com.example.mmm_tp1;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +30,7 @@ public class Fragment2 extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         SharedInfoVM model = new ViewModelProvider(requireActivity()).get(SharedInfoVM.class);
-        model.getData().observe(getViewLifecycleOwner(), data -> {
+        model.getCurrentUserInfo().observe(getViewLifecycleOwner(), data -> {
             // Update the UI.
             ((TextView) view.findViewById(R.id.textView3)).setText(data.nom);
             ((TextView) view.findViewById(R.id.textView4)).setText(data.prenom);

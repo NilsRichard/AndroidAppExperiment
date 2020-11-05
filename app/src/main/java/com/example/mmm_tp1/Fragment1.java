@@ -18,6 +18,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Fragment1 extends Fragment {
     private OnFragment1InteractionListener mListener;
 
@@ -83,7 +86,10 @@ public class Fragment1 extends Fragment {
         String tel = ((EditText) getView().findViewById(R.id.editTel)).getText().toString();
 
         if (mListener != null) {
-            myData.setdata(new UserInfo(nom, prenom, villeNaissance, dateNaissance, tel));
+            List<UserInfo> list = myData.getUserInfos().getValue();
+            if(list==null) list = new ArrayList<>();
+            list.add(new UserInfo(nom, prenom, villeNaissance, dateNaissance, tel));
+            myData.setUserInfos(list);
 
             mListener.onFragment1Interaction();
         }
@@ -109,6 +115,7 @@ public class Fragment1 extends Fragment {
 
     /**
      * Old version in tp1
+     *
      * @param view
      */
     public void toastOnValidate(View view) {
