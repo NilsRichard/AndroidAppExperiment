@@ -17,10 +17,14 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class Fragment1 extends Fragment {
     private OnFragment1InteractionListener mListener;
 
-    private DBViewModel viewModel;
+    private FirebaseDatabase mFireDataBase;
+    private DatabaseReference mContactsDatabaseReference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +35,8 @@ public class Fragment1 extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = new ViewModelProvider(requireActivity()).get(DBViewModel.class);
+        mFireDataBase = FirebaseDatabase.getInstance();
+        mContactsDatabaseReference = mFireDataBase.getReference().child("userInfos");
     }
 
     @Override
@@ -41,6 +46,7 @@ public class Fragment1 extends Fragment {
         View v = inflater.inflate(R.layout.fragment1, container, false);
 
         v.findViewById(R.id.button).setOnClickListener(this::onValidate);
+
 
         return v;
     }
@@ -83,7 +89,7 @@ public class Fragment1 extends Fragment {
 
         if (mListener != null) {
             UserInfo userInfo = new UserInfo(nom, prenom, villeNaissance, dateNaissance, tel);
-            viewModel.insert(userInfo);
+            mContactsDatabaseReference.push().setValue(userInfo);
             mListener.onFragment1Interaction();
         }
 

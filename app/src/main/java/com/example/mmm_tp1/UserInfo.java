@@ -4,26 +4,27 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "user_info")
+import com.firebase.ui.auth.data.model.User;
+
 public class UserInfo {
 
-    @PrimaryKey(autoGenerate = true)
-    private int uid;
+    private String uid;
 
-    @ColumnInfo(name = "nom")
     private String nom;
 
-    @ColumnInfo(name = "prenom")
     private String prenom;
 
-    @ColumnInfo(name = "villeNaissance")
     private String villeNaissance;
 
-    @ColumnInfo(name = "dateNaissance")
     private String dateNaissance;
 
-    @ColumnInfo(name = "tel")
     private String tel;
+
+    private int likes;
+
+    public UserInfo (){
+        // Needed
+    }
 
     public UserInfo(String nom, String prenom, String villeNaissance, String dateNaissance, String tel) {
         this.nom = nom;
@@ -31,13 +32,22 @@ public class UserInfo {
         this.villeNaissance = villeNaissance;
         this.dateNaissance = dateNaissance;
         this.tel = tel;
+        this.likes = 0;
     }
 
-    public int getUid() {
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public String getUid() {
         return uid;
     }
 
-    public void setUid(int uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 

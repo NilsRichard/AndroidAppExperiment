@@ -1,5 +1,6 @@
 package com.example.mmm_tp1;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,35 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.UserIn
             });
 
         }
+    }
+
+    public List<UserInfo> getUserInfos() {
+        return userInfos;
+    }
+
+    public void removeUserInfoWithId(String uid) {
+        userInfos.removeIf(contact -> (contact.getUid().equals(uid)));
+        notifyDataSetChanged();
+    }
+
+    public void addUserInfo(UserInfo userInfo) {
+        this.userInfos.add(userInfo);
+        notifyDataSetChanged();
+    }
+
+    public void updateUserInfo(UserInfo userInfo) {
+
+        UserInfo oldUserInfo = userInfos.stream()
+                .filter(c -> (userInfo.getUid().equals(c.getUid())))
+                .findFirst()
+                .orElse(null);
+        if (oldUserInfo != null) {
+            userInfos.set(userInfos.indexOf(oldUserInfo), userInfo);
+            Log.i("TAG", "updated likes from DB for " + userInfo.getNom() + " = " + userInfo.getLikes());
+        }
+
+        notifyDataSetChanged();
+
     }
 
     public void setUserInfos(List<UserInfo> Users) {
