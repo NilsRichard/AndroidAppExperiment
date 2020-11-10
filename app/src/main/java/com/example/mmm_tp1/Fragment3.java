@@ -2,18 +2,16 @@ package com.example.mmm_tp1;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,10 +22,7 @@ import java.util.List;
 
 public class Fragment3 extends Fragment implements UserInfoAdapter.UserInfoAdapterListener {
 
-    private RecyclerView recyclerView;
-    private List<UserInfo> contactList;
-    private UserInfoAdapter mAdapter;
-    private SearchView searchView;
+    private DBViewModel viewModel;
 
     private OnFragment3InteractionListener mListener;
 
@@ -41,34 +36,43 @@ public class Fragment3 extends Fragment implements UserInfoAdapter.UserInfoAdapt
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment3, container, false);
 
-        contactList = new ArrayList<>();
-
-        SharedInfoVM model = new ViewModelProvider(requireActivity()).get(SharedInfoVM.class);
-        model.getUserInfos().observe(getViewLifecycleOwner(), data -> {
-            contactList.addAll(data);
-        });
-
         // handle the recycler view
-        recyclerView = v.findViewById(R.id.recyclerView);
-        mAdapter = new UserInfoAdapter(contactList, this);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setAdapter(mAdapter);
+        RecyclerView recyclerView = v.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        final UserInfoAdapter adapter = new UserInfoAdapter(new ArrayList<>(), this);
+        recyclerView.setAdapter(adapter);
 
+        // on crée une instance de notre ViewModel
+        //viewModel = ViewModelProviders.of(this).get(ViewModel.class);
+        viewModel = new ViewModelProvider.AndroidViewModelFactory(requireActivity().getApplication()).create(DBViewModel.class);
+
+        // et on ajoute un observer sur les utilisateurs...
+        viewModel.getAllUsers().observe(getViewLifecycleOwner(), adapter::setUserInfos);
 
         // handle the floating action menu
         FloatingActionButton myFab = v.findViewById(R.id.nouveauClient);
-        myFab.setOnClickListener(v1 -> {
-            mListener.onFragment3Interaction();
-        });
+        myFab.setOnClickListener(v1 -> mListener.onFragment3Interaction());
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                viewModel.delete(adapter.getUserAt(viewHolder.getAdapterPosition()));
+                Toast.makeText(getActivity(), "User info deleted", Toast.LENGTH_SHORT).show();
+            }
+        }).attachToRecyclerView(recyclerView);
 
         return v;
     }
 
-
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof OnFragment3InteractionListener) {
             mListener = (OnFragment3InteractionListener) context;
@@ -101,6 +105,11 @@ public class Fragment3 extends Fragment implements UserInfoAdapter.UserInfoAdapt
      */
     public interface OnFragment3InteractionListener {
         void onFragment3Interaction();
+    }
+
+    public void addUserInfo(UserInfo userInfo) {
+        Log.i("TAG","Adding a view...");
+        viewModel.insert(userInfo);
     }
 
 }

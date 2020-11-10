@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+@Deprecated
 public class Fragment2 extends Fragment {
     private OnFragment2InteractionListener mListener;
 
@@ -32,11 +33,11 @@ public class Fragment2 extends Fragment {
         SharedInfoVM model = new ViewModelProvider(requireActivity()).get(SharedInfoVM.class);
         model.getCurrentUserInfo().observe(getViewLifecycleOwner(), data -> {
             // Update the UI.
-            ((TextView) view.findViewById(R.id.textView3)).setText(data.nom);
-            ((TextView) view.findViewById(R.id.textView4)).setText(data.prenom);
-            ((TextView) view.findViewById(R.id.textView5)).setText(data.villeNaissance);
-            ((TextView) view.findViewById(R.id.textView6)).setText(data.dateNaissance);
-            ((TextView) view.findViewById(R.id.textView7)).setText(data.tel);
+            ((TextView) view.findViewById(R.id.textView3)).setText(data.getNom());
+            ((TextView) view.findViewById(R.id.textView4)).setText(data.getPrenom());
+            ((TextView) view.findViewById(R.id.textView5)).setText(data.getVilleNaissance());
+            ((TextView) view.findViewById(R.id.textView6)).setText(data.getDateNaissance());
+            ((TextView) view.findViewById(R.id.textView7)).setText(data.getTel());
         });
     }
 

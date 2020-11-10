@@ -1,5 +1,6 @@
 package com.example.mmm_tp1;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,22 +11,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Fragment1 extends Fragment {
     private OnFragment1InteractionListener mListener;
 
-    // my Shared data between the fragments
-    private SharedInfoVM myData;
+    private DBViewModel viewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +31,7 @@ public class Fragment1 extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        myData = new ViewModelProvider(requireActivity()).get(SharedInfoVM.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(DBViewModel.class);
     }
 
     @Override
@@ -51,26 +46,27 @@ public class Fragment1 extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @SuppressLint("NonConstantResourceId")
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item1:
-                ((EditText) getView().findViewById(R.id.editNomText)).setText("");
-                ((EditText) getView().findViewById(R.id.editPrenomText)).setText("");
-                ((EditText) getView().findViewById(R.id.editVilleText)).setText("");
-                ((EditText) getView().findViewById(R.id.editTextDate)).setText("");
-                ((EditText) getView().findViewById(R.id.editTel)).setText("");
+                ((EditText) requireView().findViewById(R.id.editNomText)).setText("");
+                ((EditText) requireView().findViewById(R.id.editPrenomText)).setText("");
+                ((EditText) requireView().findViewById(R.id.editVilleText)).setText("");
+                ((EditText) requireView().findViewById(R.id.editTextDate)).setText("");
+                ((EditText) requireView().findViewById(R.id.editTel)).setText("");
                 return true;
             case R.id.item2:
-                getView().findViewById(R.id.editTel).setVisibility(View.VISIBLE);
+                requireView().findViewById(R.id.editTel).setVisibility(View.VISIBLE);
                 return true;
             case R.id.item3:
                 Intent intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://fr.wikipedia.org/wiki/" + ((EditText) getView().findViewById(R.id.editVilleText)).getText()));
+                        Uri.parse("http://fr.wikipedia.org/wiki/" + ((EditText) requireView().findViewById(R.id.editVilleText)).getText()));
                 startActivity(intent);
                 return true;
             default:
@@ -79,21 +75,22 @@ public class Fragment1 extends Fragment {
     }
 
     public void onValidate(View view) {
-        String nom = ((EditText) getView().findViewById(R.id.editNomText)).getText().toString();
-        String prenom = ((EditText) getView().findViewById(R.id.editPrenomText)).getText().toString();
-        String villeNaissance = ((EditText) getView().findViewById(R.id.editVilleText)).getText().toString();
-        String dateNaissance = ((EditText) getView().findViewById(R.id.editTextDate)).getText().toString();
-        String tel = ((EditText) getView().findViewById(R.id.editTel)).getText().toString();
+        String nom = ((EditText) requireView().findViewById(R.id.editNomText)).getText().toString();
+        String prenom = ((EditText) requireView().findViewById(R.id.editPrenomText)).getText().toString();
+        String villeNaissance = ((EditText) requireView().findViewById(R.id.editVilleText)).getText().toString();
+        String dateNaissance = ((EditText) requireView().findViewById(R.id.editTextDate)).getText().toString();
+        String tel = ((EditText) requireView().findViewById(R.id.editTel)).getText().toString();
 
         if (mListener != null) {
-            myData.addUserInfo(new UserInfo(nom, prenom, villeNaissance, dateNaissance, tel));
+            UserInfo userInfo = new UserInfo(nom, prenom, villeNaissance, dateNaissance, tel);
+            viewModel.insert(userInfo);
             mListener.onFragment1Interaction();
         }
 
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (context instanceof OnFragment1InteractionListener) {
             mListener = (OnFragment1InteractionListener) context;
@@ -107,25 +104,6 @@ public class Fragment1 extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    /**
-     * Old version in tp1
-     *
-     * @param view
-     */
-    public void toastOnValidate(View view) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Bonjour ");
-
-        String nom = ((EditText) getView().findViewById(R.id.editNomText)).getText().toString();
-        String prenom = ((EditText) getView().findViewById(R.id.editPrenomText)).getText().toString();
-        String villeNaissance = ((EditText) getView().findViewById(R.id.editVilleText)).getText().toString();
-        String dateNaissance = ((EditText) getView().findViewById(R.id.editTextDate)).getText().toString();
-
-        stringBuilder.append(nom).append(" ").append(prenom).append(" né à ").append(villeNaissance).append(" à ").append(dateNaissance);
-
-        Toast.makeText(getActivity(), stringBuilder.toString(), Toast.LENGTH_SHORT).show();
     }
 
     /**

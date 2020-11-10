@@ -13,18 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.UserInfoHolder> implements Filterable {
+public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.UserInfoHolder> {
 
-    private final List<UserInfo> contactList;
+    private List<UserInfo> userInfos;
     private final UserInfoAdapterListener listener;
 
-    private List<UserInfo> contactListFiltered;
 
-
-    public UserInfoAdapter(List<UserInfo> contactList, UserInfoAdapterListener listener) {
+    public UserInfoAdapter(List<UserInfo> userInfos, UserInfoAdapterListener listener) {
         this.listener = listener;
-        this.contactList = contactList;
-        this.contactListFiltered = contactList;
+        this.userInfos = userInfos;
     }
 
     public class UserInfoHolder extends RecyclerView.ViewHolder {
@@ -39,11 +36,20 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.UserIn
 
             view.setOnClickListener(view1 -> {
                 // send selected contact in callback
-                listener.onUserInfoSelected(contactListFiltered.get(getAdapterPosition()));
+                listener.onUserInfoSelected(userInfos.get(getAdapterPosition()));
 
             });
 
         }
+    }
+
+    public void setUserInfos(List<UserInfo> Users) {
+        this.userInfos = Users;
+        notifyDataSetChanged();
+    }
+
+    public UserInfo getUserAt(int adapterPosition) {
+        return userInfos.get(adapterPosition);
     }
 
     @NonNull
@@ -57,7 +63,7 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.UserIn
 
     @Override
     public void onBindViewHolder(@NonNull UserInfoHolder holder, int position) {
-        final UserInfo contact = contactListFiltered.get(position);
+        final UserInfo contact = userInfos.get(position);
         holder.nom.setText(contact.getNom());
         holder.prenom.setText(contact.getPrenom());
         holder.ville.setText(contact.getVilleNaissance());
@@ -66,47 +72,11 @@ public class UserInfoAdapter extends RecyclerView.Adapter<UserInfoAdapter.UserIn
 
     @Override
     public int getItemCount() {
-        return contactListFiltered.size();
-    }
-
-    @Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence charSequence) {
-                String charString = charSequence.toString();
-                if (charString.isEmpty()) {
-                    contactListFiltered = contactList;
-                } else {
-                    List<UserInfo> filteredList = new ArrayList<>();
-                    for (UserInfo row : contactList) {
-
-                        // name match condition. this might differ depending on your requirement
-                        // here we are looking for name or phone number match
-                        if (row.getNom().toLowerCase().contains(charString.toLowerCase()) || row.getPrenom().contains(charSequence)) {
-                            filteredList.add(row);
-                        }
-                    }
-
-                    contactListFiltered = filteredList;
-                }
-
-                FilterResults filterResults = new FilterResults();
-                filterResults.values = contactListFiltered;
-                return filterResults;
-            }
-
-            @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                contactListFiltered = (ArrayList<UserInfo>) filterResults.values;
-                notifyDataSetChanged();
-            }
-        };
+        return userInfos.size();
     }
 
     public interface UserInfoAdapterListener {
         void onUserInfoSelected(UserInfo userInfo);
     }
-
 
 }

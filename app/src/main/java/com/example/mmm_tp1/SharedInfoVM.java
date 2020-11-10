@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class SharedInfoVM extends ViewModel {
     private final MutableLiveData<UserInfo> currentUserInfo = new MutableLiveData<>();
 
